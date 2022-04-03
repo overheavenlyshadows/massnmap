@@ -5,7 +5,17 @@ Massnmap is the wrapper for masscan and nmap scripts. Massnmap makes scan using 
 
 ### Usage
 
+## Using Script
+
 `sudo masscan <IP/Subnet> <masscan args> --nm <nmap args>`
+
+## Using Docker
+
+```
+docker build -t massnmap .  
+
+docker run massnmap <IP/Subnet> <masscan args> --nm <nmap args>
+```
 
 **❗️Root required❗**
 
