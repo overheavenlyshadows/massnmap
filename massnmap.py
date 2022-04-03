@@ -83,6 +83,9 @@ def nmap_run(nmap_output):
         #     nmap_mode = 'udp'
         
 def main():
+    print("\n===============")
+    print("|Massnmap v1.0|")
+    print("===============\n")
     args_parse()
     args_check()
     masscan_run()
