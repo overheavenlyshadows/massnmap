@@ -1,4 +1,4 @@
-# Description
+## Description
 
 Massnmap is the wrapper for masscan and nmap scripts. Massnmap makes scan using masscan on inputed target and gets output with IP:Ports pairs. Then, nmap runs on discovered services with inputed args. ez pezy.
 
