@@ -6,13 +6,12 @@ import subprocess
 import argparse
 import re
 import sys, os
+from time import sleep
 
 
 def args_parse():
     global argparser
-    argparser = argparse.ArgumentParser(description="""
-    massnmap <IP/Range or args for list> <masscan args> --nm <nmap args>
-    """)
+    argparser = argparse.ArgumentParser(description="Do not use Masscan/Nmap input/output flags!!! Use Linux output redirect to save results to file.", usage="massnmap <IP/Subnet> <masscan args> --nm <nmap args>")
     argparser.add_argument('--nm', help='Delimeter between masscan and nmap args', required=True, action='store_true')
     argparser.parse_known_args()
     global target_ip
@@ -22,10 +21,6 @@ def args_parse():
     global masscan_args, nmap_args
     masscan_args = all_args[1:nm_pos]
     nmap_args = all_args[nm_pos+1:]
-    print(nmap_args)
-    # print(all_args)
-    # print(nm_pos)
-    # print(masscan_args)
 
 
 def args_check():
@@ -46,6 +41,10 @@ def args_check():
 
         
 def masscan_run():
+    print("\n=======================================================")
+    print("Masscan args: ", target_ip, *masscan_args)
+    print("Masscan args: ", target_ip, *nmap_args)
+    print("=======================================================\n")
     try:
         nmap_input = {}
         masscan_output = subprocess.check_output(['masscan', target_ip, *masscan_args]).decode('utf-8')
@@ -76,6 +75,7 @@ def nmap_run(nmap_output):
         nmap_output = subprocess.check_output(['nmap', target_ip, '-p'+port_list_ready, *nmap_args], stderr=DEVNULL).decode('utf-8')
         print(nmap_output)
         print('\n----------------------------------------------------\n')
+        sleep(1)
              
         # if re.search(r"tcp", ports[0]:
         #     nmap_mode = 'tcp'
