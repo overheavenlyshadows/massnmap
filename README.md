@@ -19,11 +19,11 @@ docker build -t massnmap .
 docker run massnmap <IP/Subnet> <masscan args> --nm <nmap args>
 ```
 
-**❗️Root required❗**
+**❗️Root required**
 
 **❗️Do not use Masscan/Nmap output args!!!**
 
-**❗️For saving results use linux output redirection**❗
+**❗️For saving results use linux output redirection**
 
 
 
