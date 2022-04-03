@@ -19,4 +19,4 @@ Massnmap is the wrapper for masscan and nmap scripts. Massnmap makes scan using 
 
 ❗️Script do not support input args for masscan (hope i will fix it for flexibility)
 
-❗️Sometimes nmap scan host with no result. Have no idea why, hope will fix it.
+❗️Sometimes nmap has no result for host which has ports. Have no idea why, hope will fix it.
