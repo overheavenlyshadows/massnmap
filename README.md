@@ -7,15 +7,16 @@ Massnmap is the wrapper for masscan and nmap scripts. Massnmap makes scan using 
 
 `sudo masscan <IP/Subnet> <masscan args> --nm <nmap args>`
 
-**❗️Root required❗️**
+**❗️Root required❗**
 
-**❗️Do not use Masscan/Nmap output args!!!❗️**
+**❗️Do not use Masscan/Nmap output args!!!**
 
-**❗️For saving results use linux output redirection**❗️
+**❗️For saving results use linux output redirection**❗
 
 
 
 ### Problems
 
 ❗️Script do not support input args for masscan (hope i will fix it for flexibility)
+
 ❗️Sometimes nmap scan host with no result. Have no idea why, hope will fix it.
