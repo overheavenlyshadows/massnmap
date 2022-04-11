@@ -43,7 +43,7 @@ def args_check():
 def masscan_run():
     print("\n=======================================================")
     print("Masscan args: ", target_ip, *masscan_args)
-    print("Masscan args: ", target_ip, *nmap_args)
+    print("Nmap args: ", target_ip, *nmap_args)
     print("=======================================================\n")
     try:
         nmap_input = {}
