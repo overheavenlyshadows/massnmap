@@ -84,7 +84,7 @@ def nmap_run(nmap_output):
         
 def main():
     print("\n===============")
-    print("|Massnmap v1.0|")
+    print("Massnmap v1.0")
     print("===============\n")
     args_parse()
     args_check()
