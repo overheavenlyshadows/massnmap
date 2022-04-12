@@ -29,8 +29,10 @@ docker run massnmap <IP/Subnet> <masscan args> --nm <nmap args>
 
 
 
-## Problems
+## Version fast info
 
-❗️Script do not support input args for masscan (hope i will fix it for flexibility)
-
-❗️Sometimes nmap has no result for host which has ports. Have no idea why, hope will fix it.
+### v1.1
+- Target list input feature was added
+- Some minor fixes
+### v1.0
+- Script added
