@@ -26,9 +26,26 @@ def args_parse():
     nmap_args = all_args[nm_pos+1:]
     if re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", target_ip):
         masscan_list_mode = 0
+        global masscan_args_wo_target
+        masscan_args_wo_target = all_args[1:nm_pos]
     else:
         masscan_list_mode = 1
 
+def args_check():
+    try:
+        subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target ], stderr=STDOUT)
+    except Exception as error:
+        if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
+            print('Masscan args are invalid:')
+            print(error.output.decode('utf-8'))
+            quit()
+    try:
+        subprocess.check_output(['nmap', *nmap_args], stderr=STDOUT)
+    except Exception as error:
+        if (re.search(r".*unrecognized option.*", (error.output).decode('utf-8')) is not None):
+            print('Nmap args are invalid:')
+            print(error.output.decode('utf-8'))
+            quit()
         
 def masscan_run():
     print("\n============================================================")
@@ -48,12 +65,8 @@ def masscan_run():
         
         nmap_run(nmap_input)
     except Exception as error:
-        if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
-            print('Masscan args are invalid:')
-            print(error.output.decode('utf-8'))
-        else:
-            print('\n\n Unexcpected Error. Check logs above.')
-            print(error.output.decode('utf-8'))
+        print('\n\n UnexcpectedError.')
+        print(error.output.decode('utf-8'))
         quit()
 
 
@@ -74,12 +87,8 @@ def nmap_run(nmap_output):
             print('\n----------------------------------------------------\n')
             sleep(1)
     except Exception as error:
-        if (re.search(r".*unrecognized option.*", (error.output).decode('utf-8')) is not None):
-            print('Nmap args are invalid:')
-            print(error.output.decode('utf-8'))
-        else:
-            print('\n\n Unexcpected Error. Check logs above.')
-            print(error.output.decode('utf-8'))
+        print('\n\n Unexcpected Error. Check logs above.')
+        print(error.output)
         quit()
             
              
