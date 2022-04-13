@@ -32,18 +32,19 @@ def args_parse():
         masscan_list_mode = 1
 
 def args_check():
+    print('Checking if args are legal...\n')
     try:
-        subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target ], stderr=STDOUT)
+        subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0'], stderr=STDOUT)
     except Exception as error:
         if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
-            print('Masscan args are invalid:')
+            print('[ERROR] Masscan args are invalid:')
             print(error.output.decode('utf-8'))
             quit()
     try:
         subprocess.check_output(['nmap', *nmap_args], stderr=STDOUT)
     except Exception as error:
-        if (re.search(r".*unrecognized option.*", (error.output).decode('utf-8')) is not None):
-            print('Nmap args are invalid:')
+        if ((re.search(r".*unrecognized option|Illegal Argument.*", (error.output).decode('utf-8'))) is not None):
+            print('[ERROR] Nmap args are invalid:')
             print(error.output.decode('utf-8'))
             quit()
         
@@ -65,7 +66,7 @@ def masscan_run():
         
         nmap_run(nmap_input)
     except Exception as error:
-        print('\n\n UnexcpectedError.')
+        print('\n\n [ERROR] Unexcpected Error.')
         print(error.output.decode('utf-8'))
         quit()
 
@@ -87,7 +88,7 @@ def nmap_run(nmap_output):
             print('\n----------------------------------------------------\n')
             sleep(1)
     except Exception as error:
-        print('\n\n Unexcpected Error. Check logs above.')
+        print('\n\n [ERROR] Unexcpected Error.')
         print(error.output)
         quit()
             
@@ -102,10 +103,8 @@ def main():
     print("Massmap v" + str(script_version))
     print("===============\n")
     args_parse()
+    args_check()
     masscan_run()
-
-    
-
 
 if __name__ == '__main__':
     if os.geteuid() != 0:
