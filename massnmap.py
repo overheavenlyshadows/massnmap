@@ -19,21 +19,26 @@ def args_parse():
     argparser.parse_known_args()
     global target_ip
     target_ip = sys.argv[1]
-    all_args = tuple(sys.argv[1:])
+    all_args = list(sys.argv[1:])
     nm_pos = all_args.index('--nm')
-    global masscan_args, nmap_args, masscan_list_mode
+    global masscan_args, nmap_args, masscan_list_mode, masscan_args_wo_target
     masscan_args = all_args[0:nm_pos]
     nmap_args = all_args[nm_pos+1:]
     if re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", target_ip):
         masscan_list_mode = 0
-        global masscan_args_wo_target
         masscan_args_wo_target = all_args[1:nm_pos]
     else:
         masscan_list_mode = 1
+        il_pos = all_args.index('-iL')
+        il_list_value = all_args[il_pos + 1] 
+        masscan_args_wo_target = all_args[0:nm_pos]
+        del masscan_args_wo_target[il_pos]
+        masscan_args_wo_target.remove(il_list_value)
 
 def args_check():
     print('Checking if args are legal...\n')
     try:
+        print('masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0')
         subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0'], stderr=STDOUT)
     except Exception as error:
         if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
@@ -43,7 +48,7 @@ def args_check():
     try:
         subprocess.check_output(['nmap', *nmap_args], stderr=STDOUT)
     except Exception as error:
-        if ((re.search(r".*unrecognized option|Illegal Argument.*", (error.output).decode('utf-8'))) is not None):
+        if ((re.search(r".*(unrecognized option|Illegal Argument).*", (error.output).decode('utf-8'))) is not None):
             print('[ERROR] Nmap args are invalid:')
             print(error.output.decode('utf-8'))
             quit()
