@@ -79,7 +79,7 @@ def nmap_run(nmap_output):
             print(error.output.decode('utf-8'))
         else:
             print('\n\n Unexcpected Error. Check logs above.')
-        print(error.output.decode('utf-8'))
+            print(error.output.decode('utf-8'))
         quit()
             
              
