@@ -75,7 +75,8 @@ def nmap_run(nmap_output):
             sleep(1)
     except Exception as error:
         if (re.search(r".*unrecognized option.*", (error.output).decode('utf-8')) is not None):
-            print('Masscan args are invalid:')
+            print('Nmap args are invalid:')
+            print(error.output.decode('utf-8'))
         else:
             print('\n\n Unexcpected Error. Check logs above.')
         print(error.output.decode('utf-8'))
