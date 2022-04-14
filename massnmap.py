@@ -38,7 +38,6 @@ def args_parse():
 def args_check():
     print('Checking if args are legal...\n')
     try:
-        print('masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0')
         subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0'], stderr=STDOUT)
     except Exception as error:
         if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
