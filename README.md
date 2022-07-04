@@ -30,7 +30,8 @@ docker run massnmap <IP/Subnet> <masscan args> --nm <nmap args>
 
 
 ## Version fast info
-
+### v1.1.1
+- Sorted output added
 ### v1.1
 - Target list input feature was added
 - Some minor fixes

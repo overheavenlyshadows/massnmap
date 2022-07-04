@@ -8,8 +8,9 @@ import argparse
 import re
 import sys, os
 from time import sleep
+from socket import inet_aton
 
-script_version = 1.1
+script_version = "1.1.1"
 
 
 def args_parse():
@@ -36,20 +37,33 @@ def args_parse():
         masscan_args_wo_target.remove(il_list_value)
 
 def args_check():
-    print('Checking if args are legal...\n')
+    print('[INFO] Checking if args are correct...\n')
     try:
-        subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0'], stderr=STDOUT)
-    except Exception as error:
+        subprocess.check_output(['masscan', '127.0.0.1', *masscan_args_wo_target, '--wait 0'], stderr=STDOUT, timeout=2)
+    except subprocess.TimeoutExpired as e:
+            print('[INFO] Masscan args are correct')   
+    except subprocess.CalledProcessError as error:
         if (re.search(r".*unknown config option.*", (error.output).decode('utf-8')) is not None):
             print('[ERROR] Masscan args are invalid:')
             print(error.output.decode('utf-8'))
             quit()
+        else:
+            print('[ERROR] Unknown error:')
+            print(error.output.decode('utf-8'))
+            quit()
     try:
-        subprocess.check_output(['nmap', *nmap_args], stderr=STDOUT)
+        subprocess.check_output(['nmap', *nmap_args], stderr=STDOUT, timeout=2)
+        print('[INFO] Nmap args are correct')
+    except subprocess.TimeoutExpired as e:
+            print('[INFO] Nmap args are correct')   
     except Exception as error:
         if ((re.search(r".*(unrecognized option|Illegal Argument).*", (error.output).decode('utf-8'))) is not None):
             print('[ERROR] Nmap args are invalid:')
-            print(error.output.decode('utf-8'))
+            print((error.output).decode('utf-8'))
+            quit()
+        else:
+            print('[ERROR] Unknown error:')
+            print((error.output).decode('utf-8'))
             quit()
         
 def masscan_run():
@@ -58,27 +72,28 @@ def masscan_run():
     print("Nmap args: ", *nmap_args)
     print("============================================================\n")
     try:
-        nmap_input = {}
+        nmap_unsorted_input = {}
         masscan_output = subprocess.check_output(['masscan', *masscan_args]).decode('utf-8')
         for line in masscan_output.splitlines():
             ip = re.search(r"\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}", line).group(0)
             port = re.search("\d{1,5}\/(tcp|udp)", line).group(0)
-            if not (ip in nmap_input.keys()):
-                nmap_input[ip] = [port]
+            if not (ip in nmap_unsorted_input.keys()):
+                nmap_unsorted_input[ip] = [port]
             else:
-                nmap_input[ip].append(port)
-        
+                nmap_unsorted_input[ip].append(port)
+        nmap_input = dict(sorted(nmap_unsorted_input.items(), key=lambda item: inet_aton(item[0])))
+        print(nmap_input)
         nmap_run(nmap_input)
     except Exception as error:
         print('\n\n [ERROR] Unexcpected Error.')
-        print(error.output.decode('utf-8'))
+        print((error.output).decode('utf-8'))
         quit()
 
 
-def nmap_run(nmap_output):
+def nmap_run(nmap_input):
     delim = ","
     try:
-        for line in nmap_output.items():
+        for line in nmap_input.items():
             port_list = []
             target_ip = line[0]
             ports = line[1]
@@ -93,7 +108,7 @@ def nmap_run(nmap_output):
             sleep(1)
     except Exception as error:
         print('\n\n [ERROR] Unexcpected Error.')
-        print(error.output)
+        print((error.output).decode('utf-8'))
         quit()
             
              
