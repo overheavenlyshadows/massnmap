@@ -1,7 +1,7 @@
 ## Requirements
 
-Python 3.7+
-Installed Nmap and Masscan
+- Python 3.7+
+- Installed Nmap and Masscan
 
 ## Description
 
