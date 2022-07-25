@@ -23,6 +23,9 @@ sudo masscan -il file.txt <masscan args> --nm <nmap args>
 docker build -t massnmap .  
 
 docker run massnmap <IP/Subnet> <masscan args> --nm <nmap args>
+
+//targets from file
+docker run -d -it --name massnmap -v /root/tmp/:/tmp/ massnmap -iL /tmp/targets -p- --rate 8000 --nm -Pn -T4 -A > /tmp/nmap_res
 ```
 
 ## Important
