@@ -2,7 +2,6 @@
 
 from ast import Try
 from asyncio.subprocess import DEVNULL, STDOUT
-from ensurepip import version
 import subprocess
 import argparse
 import re
